@@ -57,14 +57,6 @@ Content-Type: application/json
 }
 ```
 
-## Deployment
-For production deployment, consider using Docker or hosting services like AWS, Azure, or Google Cloud.
 
-## License
-This project is licensed under the MIT License.
-
----
-
-**Note:** Free Mailgun accounts can only send emails to authorized recipients. Add recipient addresses in the Mailgun Account Settings to test the API.
 
 
