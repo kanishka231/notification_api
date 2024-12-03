@@ -1,24 +1,14 @@
-from fastapi import FastAPI, HTTPException # type: ignore
-from pydantic import BaseModel, EmailStr # type: ignore
-import redis # type: ignore
-import json
+from fastapi import FastAPI
+from models import NotificationRequest
+from tasks import send_email_threaded
 
 app = FastAPI()
 
-# Redis connection for queuing
-redis_client = redis.StrictRedis(host="localhost", port=6379, db=0)
-
-class NotificationRequest(BaseModel):
-    company_id: str
-    customer_email: EmailStr
-    package_id: str
-    status: str
-
-@app.post("/send-notification")
+@app.post("/send-notification/")
 async def send_notification(request: NotificationRequest):
-    try:
-        # Push to Redis queue
-        redis_client.lpush("notifications", json.dumps(request.dict()))
-        return {"message": "Notification queued successfully"}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail="Error queuing notification")
+    """
+    API endpoint to send notification emails.
+    """
+    send_email_threaded(request.email, request.package_status)  # Non-blocking email sending
+    return {"message": f"Notification for {request.email} is being processed."}
+
