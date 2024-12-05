@@ -1,3 +1,4 @@
+
 # Notification API
 
 This project is a Notification API built with FastAPI to send notifications via different channels such as Email, SMS, and WhatsApp. The API uses external services for sending notifications and is designed to be easily extensible for integrating other services in the future.
@@ -39,7 +40,7 @@ This project is a Notification API built with FastAPI to send notifications via 
 3. **Activate the virtual environment**:
     - On Windows:
         ```bash
-        \venv\Scripts\activate
+        venv\Scripts\activate
         ```
     - On macOS/Linux:
         ```bash
@@ -127,13 +128,12 @@ The request body should contain a JSON object with an array of notifications. Ea
 
 ## Example Request
 
-You can test the batch notification feature using an HTTP client like Postman or Thunder Client. Here’s an example of how to send a batch notification request
+You can test the batch notification feature using an HTTP client like Postman or Thunder Client. Here’s an example of how to send a batch notification request:
 
 POST http://127.0.0.1:8000/send-batch-notification/
 Content-Type: application/json
 
-```
-
+```json
 {
   "notifications": [
     {
@@ -158,10 +158,64 @@ Content-Type: application/json
 
 The expected response will indicate that all notifications are being processed:
 
+```json
 {
   "message": "All notifications are being processed."
 }
+```
 
+## Locust Load Testing
+
+To ensure your API can handle a high volume of requests (such as 10,000 requests per minute), we can use **Locust** to perform load testing.
+
+### Steps to Run Locust Tests
+
+1. **Install Locust**:
+    ```bash
+    pip install locust
+    ```
+
+2. **Create a `locustfile.py`** in the root directory of your project with the following code:
+
+```python
+from locust import FastHttpUser, task, between
+
+class UserBehavior(FastHttpUser):
+    wait_time = between(0.1, 0.5)  # Random wait time between 0.1 and 0.5 seconds
+
+    @task
+    def send_notification(self):
+        response = self.client.post("/send-notification/", json={
+           "client_id": "client123",
+           "recipient": "sbdfh@hdsf",
+           "channel": "email",
+           "message": "Your package has been shipped.",
+           "package_status": "shipped"
+        })
+        print(f"Response status: {response.status_code}, Response body: {response.text}")
+```
+
+3. **Run Locust**:
+    ```bash
+    locust -f locustfile.py --host=http://127.0.0.1:8000
+    ```
+
+4. **Open Locust Web Interface**:
+    Once Locust starts, open `http://localhost:8089` in your browser.
+
+5. **Configure Test Settings**:
+    - **Number of Users:** Set to 167 (to simulate 167 concurrent users).
+    - **Spawn Rate:** Set to 15 users/second.
+    - Start the test and observe the results in the web interface.
+
+6. **Check the Results**:
+    - The **Total Requests/Sec** value should exceed **167 RPS**, indicating that your API can handle 10,000 requests per minute.
+    - Monitor response times and failure rates to ensure everything is functioning smoothly.
+
+### Locust File Location:
+- **File**: `locustfile.py` should be placed in the root directory of your project.
+
+---
 
 ## Directory Structure
 
@@ -173,9 +227,11 @@ notification_api/
 │   ├── main.py            # FastAPI app definition
 │   ├── models.py          # Pydantic models for request validation
 │   ├── services/          # Contains different notification services (Email, SMS, etc.)
+│   │   └── mock_email_service.py   # Mock email service for testing
 │   ├── managers/          # Contains logic for managing notification services
 │   └── tasks.py           # Contains the task to send emails in a non-blocking way
 │
+├── locustfile.py          # Locust test file for load testing
 ├── requirements.txt       # List of Python dependencies
 └── .env                   # Environment variables for sensitive information
 ```
@@ -186,3 +242,8 @@ notification_api/
 - Add authentication to secure the API endpoints.
 - Create more flexible and reusable notification handling logic.
 
+### Screenshot of results
+![Screenshot](/notification_api/app/assets/rps.png)
+
+![Screenshot](/notification_api/app/assets/k.png)
+_Above: Screenshot of the application interface._
