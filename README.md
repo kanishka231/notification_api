@@ -245,4 +245,4 @@ notification_api/
 ### Screenshot of results
 ![Screenshot](app/assets/rps.png)
 
-![Screenshot](app/assets/rps.png)
+![Screenshot](app/assets/k.png)
