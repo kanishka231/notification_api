@@ -243,7 +243,6 @@ notification_api/
 - Create more flexible and reusable notification handling logic.
 
 ### Screenshot of results
-![Screenshot](/notification_api/app/assets/rps.png)
+![Screenshot](app\assets\k.png)
 
-![Screenshot](/notification_api/app/assets/k.png)
-_Above: Screenshot of the application interface._
+![Screenshot](app\assets\rps.png)
