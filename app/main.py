@@ -10,7 +10,7 @@ notification_manager = NotificationManager()
 @app.post("/send-notification/")
 async def send_notification(request: NotificationRequest):
     try:
-        notification_manager.send_notification(
+        await notification_manager.send_notification(
             channel=request.channel,
             recipient=request.recipient,
             message=request.message,

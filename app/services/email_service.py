@@ -4,7 +4,7 @@ from app.services.notification_service import NotificationService
 from app.config import SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS
 
 class EmailNotificationService(NotificationService):
-    def send(self, recipient: str, message: str):
+  async  def send(self, recipient: str, message: str):
         subject = "Notification Service"
         msg = MIMEText(message)
         msg["Subject"] = subject

@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, Field
 from typing import Optional
 
 class NotificationRequest(BaseModel):
@@ -9,7 +9,7 @@ class NotificationRequest(BaseModel):
     package_status: Optional[str] = Field(None, description="Status of the package (for email notifications)")
 
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "client_id": "client123",
                 "recipient": "kanishka@amigo.gg",

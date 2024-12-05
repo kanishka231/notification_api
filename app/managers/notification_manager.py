@@ -11,7 +11,7 @@ class NotificationManager:
             # "whatsapp": WhatsAppNotificationService(),  # Placeholder
         }
 
-    def send_notification(self, channel: str, recipient: str, message: Optional[str] = None, package_status: Optional[str] = None):
+    async def send_notification(self, channel: str, recipient: str, message: Optional[str] = None, package_status: Optional[str] = None):
         """
         Sends a notification using the specified channel.
         """
@@ -21,7 +21,7 @@ class NotificationManager:
         
         # Call the send method with channel-specific parameters
         if channel == "email":
-            service.send(recipient=recipient, message=message or f"Your package status is: {package_status}")
+            await service.send(recipient=recipient, message=message or f"Your package status is: {package_status}")
         else:
-            service.send(recipient=recipient, message=message)
+            await service.send(recipient=recipient, message=message)
 
