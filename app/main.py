@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException
-from app.models import NotificationRequest
+from app.models import NotificationRequest,NotificationBatchRequest
 from app.managers.notification_manager import NotificationManager
+import asyncio
 
 app = FastAPI()
 
@@ -22,3 +23,23 @@ async def send_notification(request: NotificationRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+
+@app.post("/send-batch-notification/")
+async def send_batch_notification(request: NotificationBatchRequest):
+    try:
+        tasks = []
+        for notification in request.notifications:
+            tasks.append(notification_manager.send_notification(
+                channel=notification.channel,
+                recipient=notification.recipient,
+                message=notification.message,
+                package_status=notification.package_status,
+            ))
+        
+        # Run all tasks concurrently
+        await asyncio.gather(*tasks)
+        return {"message": "All notifications are being processed."}
+    except ValueError as ve:
+        raise HTTPException(status_code=400, detail=str(ve))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

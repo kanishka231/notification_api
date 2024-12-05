@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import Optional
+from typing import Optional, List
 
 class NotificationRequest(BaseModel):
     client_id: str = Field(..., description="Unique ID of the client making the request")
@@ -18,3 +18,5 @@ class NotificationRequest(BaseModel):
                 "package_status": "shipped"
             }
         }
+class NotificationBatchRequest(BaseModel):
+    notifications: List[NotificationRequest]        
