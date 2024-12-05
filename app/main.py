@@ -6,7 +6,8 @@ import asyncio
 app = FastAPI()
 
 # Initialize NotificationManager
-notification_manager = NotificationManager()
+notification_manager = NotificationManager(use_mock_email=True)
+
 
 @app.post("/send-notification/")
 async def send_notification(request: NotificationRequest):

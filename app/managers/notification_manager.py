@@ -1,15 +1,23 @@
+# app/managers/notification_manager.py
+
 from app.services.email_service import EmailNotificationService
+from app.services.mock_email_service import MockEmailNotificationService
 from app.services.notification_service import NotificationService
 from typing import Optional
 
 class NotificationManager:
-    def __init__(self):
+    def __init__(self, use_mock_email: bool = False):
         # Register available services
-        self.services = {
-            "email": EmailNotificationService(),
-            # "sms": SMSNotificationService(),  # Placeholder
-            # "whatsapp": WhatsAppNotificationService(),  # Placeholder
-        }
+        if use_mock_email:
+            self.services = {
+                "email": MockEmailNotificationService(),
+            }
+        else:
+            self.services = {
+                "email": EmailNotificationService(),
+                # "sms": SMSNotificationService(),  # Placeholder
+                # "whatsapp": WhatsAppNotificationService(),  # Placeholder
+            }
 
     async def send_notification(self, channel: str, recipient: str, message: Optional[str] = None, package_status: Optional[str] = None):
         """
@@ -24,4 +32,3 @@ class NotificationManager:
             await service.send(recipient=recipient, message=message or f"Your package status is: {package_status}")
         else:
             await service.send(recipient=recipient, message=message)
-
