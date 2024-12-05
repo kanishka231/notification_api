@@ -123,6 +123,7 @@ The request body should contain a JSON object with an array of notifications. Ea
     }
   ]
 }
+```
 
 ## Example Request
 
@@ -130,6 +131,8 @@ You can test the batch notification feature using an HTTP client like Postman or
 
 POST http://127.0.0.1:8000/send-batch-notification/
 Content-Type: application/json
+
+```
 
 {
   "notifications": [
@@ -149,6 +152,7 @@ Content-Type: application/json
     }
   ]
 }
+```
 
 ### Expected Response
 
